@@ -10,5 +10,19 @@
 	"observability": {
 		"enabled": true
 	},
+	/**
+	 * Migration required to remove the WorkflowStatusDO Durable Object
+	 * that was created by the initial Cloudflare Workflows Starter template.
+	 */
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["WorkflowStatusDO"]
+		},
+		{
+			"tag": "v2",
+			"deleted_classes": ["WorkflowStatusDO"]
+		}
+	],
 	"upload_source_maps": true
 }
