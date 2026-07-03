@@ -6,10 +6,13 @@ export default {
     }
 
     const url = new URL(request.url);
+    // Normalize pathname: collapse multiple leading slashes (e.g. //v1/ → /v1/)
+    // This handles the case where ANTHROPIC_PROXY_URL has a trailing slash.
+    const pathname = '/' + url.pathname.replace(/^\/+/, '');
 
     // Forward to Anthropic API
-    if (url.pathname.startsWith('/v1/')) {
-      const target = `https://api.anthropic.com${url.pathname}${url.search}`;
+    if (pathname.startsWith('/v1/')) {
+      const target = `https://api.anthropic.com${pathname}${url.search}`;
       const headers = new Headers(request.headers);
       headers.delete('x-proxy-secret');
       headers.delete('host');
@@ -18,8 +21,8 @@ export default {
     }
 
     // Forward to Brave Search
-    if (url.pathname.startsWith('/res/')) {
-      const target = `https://api.search.brave.com${url.pathname}${url.search}`;
+    if (pathname.startsWith('/res/')) {
+      const target = `https://api.search.brave.com${pathname}${url.search}`;
       const headers = new Headers(request.headers);
       headers.delete('x-proxy-secret');
       headers.delete('host');
